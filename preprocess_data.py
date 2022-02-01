@@ -15,6 +15,18 @@ logger = logging.getLogger(__name__)
 
 
 def ds_to_numpy(ds: Dataset) -> Tuple[np.ndarray, np.ndarray]:
+    """Transform torch dataset to numpy arrays
+
+    Parameters
+    ----------
+    ds : Dataset
+        COVID dataset
+
+    Returns
+    -------
+    Tuple[np.ndarray, np.ndarray]
+        Flattened images + labels
+    """
 
     imgs = []
     labels = []
@@ -38,6 +50,23 @@ def main(
     n_dimensions: int,
     seed: int
 ):
+    """Project image using PCA
+
+    Load raw data from DATA_DIR, perform PCA 
+    and save results in OUTPUT_DIR
+
+    \f
+    Parameters
+    ----------
+    data_dir : Union[str, Path]
+        Directory containing raw data
+    output_dir : Union[str, Path]
+        Output directory
+    n_dimensions : int
+        Dimensions kept of the PCA
+    seed : int
+        PRNG seed.
+    """
     data_dir = Path(data_dir)
 
     root_dir = data_dir / 'imgs'
