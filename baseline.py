@@ -116,9 +116,9 @@ def main(
 
     classifier.fit(x_train, y_train)
     df_train['prediction'] = classifier.predict(x_train)
-    df_train['score'] = classifier.predict_proba(x_train)
+    df_train['score'] = classifier.predict_proba(x_train)[:, 1]
     df_valid['prediction'] = classifier.predict(x_valid)
-    df_valid['score'] = classifier.predict_proba(x_valid)
+    df_valid['score'] = classifier.predict_proba(x_valid)[:, 1]
 
     logger.info('Computing metrics')
     metric_train = compute_metrics(df_train)
