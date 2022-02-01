@@ -9,7 +9,7 @@ from joblib import dump
 from sklearn.decomposition import PCA
 from torch.utils.data import Dataset
 
-from .dataset import CovidImageDataset
+from dataset import CovidImageDataset
 
 logger = logging.getLogger(__name__)
 
