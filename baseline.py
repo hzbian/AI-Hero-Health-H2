@@ -110,15 +110,15 @@ def main(
     df_valid = pd.read_csv(data_dir / 'valid.csv')
 
     y_train = df_train['label']
-    y_valid = df_train['label']
 
     logger.info('Training classifier')
     classifier = get_model(model)
 
-    df_train['prediction'] = classifier.fit_predict(x_train, y_train)
-    df_train['score'] = classifier.score(x_train)
-    df_valid['prediction'] = classifier.predict(x_valid, y_valid)
-    df_valid['score'] = classifier.score(x_valid)
+    classifier.fit(x_train, y_train)
+    df_train['prediction'] = classifier.predict(x_train)
+    df_train['score'] = classifier.predict_proba(x_train)
+    df_valid['prediction'] = classifier.predict(x_valid)
+    df_valid['score'] = classifier.predict_proba(x_valid)
 
     logger.info('Computing metrics')
     metric_train = compute_metrics(df_train)
