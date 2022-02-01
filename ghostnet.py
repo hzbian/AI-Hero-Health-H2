@@ -4,15 +4,20 @@ from torchvision import transforms
 import torch
 from dataset import CovidImageDataset
 import h5py
+from tqdm import tqdm
+import itertools
 
 # preferences
 data_base = '/hkfs/work/workspace/scratch/im9193-health_challenge/data'
 data_base = '/home/dmeier/AI-HERO/data'
 seed_worker=42
 
-trainset = CovidImageDataset(
+dataset = CovidImageDataset(
     os.path.join(data_base, 'train.csv'),
     os.path.join(data_base, 'imgs'), rgb_mode=True)
+
+sample_size = 1000
+trainset = torch.utils.data.random_split(dataset, [sample_size, len(dataset)-sample_size])[0]
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=True, num_workers=0,
                                           worker_init_fn=seed_worker)
                                               
@@ -26,14 +31,10 @@ if torch.cuda.is_available():
 
 outputs = []
 labels = []
-for input_image in trainloader:
-    input_batch = input_image[0] #torch.stack([preprocess(i) for i in input_image])
-    label_batch = input_image[1]
-    #input_batch = input_tensor.unsqueeze(0) # create a mini-batch as expected by the model
-
+for input_batch, label_batch in tqdm(trainloader):
     # move the input and model to GPU for speed if available
-    if torch.cuda.is_available():
-        input_batch = input_batch.to('cuda')
+    #if torch.cuda.is_available():
+    #    input_batch = input_batch.to('cuda')
 
 
     with torch.no_grad():
