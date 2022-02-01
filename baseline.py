@@ -15,7 +15,9 @@ from sklearn.metrics import (accuracy_score, average_precision_score,
 logger = logging.getLogger(__name__)
 
 MODELS = {
-    'logistic_regression': (LogisticRegression, dict(C=1.0, n_jobs=20)),
+    'logistic_regression': (LogisticRegression, dict(C=1.0, n_jobs=20,
+                                                     max_iter=500,
+                                                     solver='saga')),
     'random_forest': (RandomForestClassifier,
                       dict(n_estimators=100, n_jobs=20)),
 }
