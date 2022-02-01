@@ -1,9 +1,10 @@
 import logging
 from pathlib import Path
-from typing import Union
+from typing import Tuple, Union
 
 import click
 import numpy as np
+import pandas as pd
 from joblib import dump
 from sklearn.decomposition import PCA
 from torch.utils.data import Dataset
@@ -13,12 +14,15 @@ from ..dataset import CovidImageDataset
 logger = logging.getLogger(__name__)
 
 
-def ds_to_numpy(ds: Dataset) -> np.ndarray:
+def ds_to_numpy(ds: Dataset) -> Tuple[np.ndarray, np.ndarray]:
 
-    return np.concatenate([
-        img.detach().cpu().numpy().flatten()[np.newaxis, ]
-        for img in ds
-    ])
+    imgs = []
+    labels = []
+    for img, label in ds:
+        imgs.append(img.detach().cpu().numpy().flatten()[np.newaxis, ])
+        labels.append(label)
+
+    return np.concatenate(imgs), np.array(labels)
 
 
 @click.command()
@@ -45,8 +49,8 @@ def main(
     logger.info(f'{len(train_ds)=}')
     logger.info(f'{len(valid_ds)=}')
 
-    train = ds_to_numpy(train_ds)
-    valid = ds_to_numpy(valid_ds)
+    train, train_labels = ds_to_numpy(train_ds)
+    valid, valid_labels = ds_to_numpy(valid_ds)
     logger.info(f'{train.shape=}')
     logger.info(f'{valid.shape=}')
 
@@ -56,6 +60,12 @@ def main(
     logger.info(f'{train_pca.shape=}')
     logger.info(f'{valid_pca.shape=}')
 
+    train_df: pd.DataFrame = train_ds.info_df
+    valid_df: pd.DataFrame = valid_ds.info_df
+
+    train_df['label'] = train_labels
+    valid_df['label'] = valid_labels
+
     output_dir = Path(output_dir)
     output_dir.mkdir(exist_ok=True, parents=True)
 
@@ -63,6 +73,11 @@ def main(
     valid_fn = output_dir / 'valid.npy'
     np.save(train_fn, train_pca)
     np.save(valid_fn, valid_pca)
+
+    train_fn = output_dir / 'train.csv'
+    valid_fn = output_dir / 'valid.csv'
+    train_df.to_csv(train_fn, index=False)
+    valid_df.to_csv(valid_fn, index=False)
 
     pca_fn = output_dir / 'pca.joblib'
     dump(pca, pca_fn)
