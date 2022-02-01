@@ -7,11 +7,12 @@ from torchvision import transforms
 
 
 class CovidImageDataset(Dataset):
-    def __init__(self, csv_file, root_dir, transform=None):
+    def __init__(self, csv_file, root_dir, transform=None, rgb_mode=False):
         self.info_df = pd.read_csv(csv_file)
         self.root_dir = root_dir
         self.transform = transform
         self.df_contains_label = True if 'label' in self.info_df.columns else False
+        self.rgb_mode=rgb_mode
 
     def __len__(self):
         return len(self.info_df)
@@ -45,7 +46,10 @@ class CovidImageDataset(Dataset):
                 transforms.ToTensor(),
                 transforms.Normalize(0.8180, 0.1748)
                 ])(image)
-
+        if self.rgb_mode:
+            image = transforms.Compose([
+                transforms.Lambda(lambda x:torch.repeat_interleave(x, 3, dim=0)),
+                ])(image)
         sample = [image, label] if self.df_contains_label else [image, img_name]
 
         return sample
