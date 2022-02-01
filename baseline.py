@@ -100,6 +100,7 @@ def main(
     model : str
         Name of the model type (logistic_regression or random_forest)
     """
+    logger.info('Loading data')
     data_dir = Path(data_dir)
 
     x_train = np.load(data_dir / 'train.npy')
@@ -111,6 +112,7 @@ def main(
     y_train = df_train['label']
     y_valid = df_train['label']
 
+    logger.info('Training classifier')
     classifier = get_model(model)
 
     df_train['prediction'] = classifier.fit_predict(x_train, y_train)
@@ -118,6 +120,7 @@ def main(
     df_valid['prediction'] = classifier.predict(x_valid, y_valid)
     df_valid['score'] = classifier.score(x_valid)
 
+    logger.info('Computing metrics')
     metric_train = compute_metrics(df_train)
     metric_train.name = 'train'
     metric_valid = compute_metrics(df_valid)
@@ -126,6 +129,7 @@ def main(
     metrics = pd.concat([metric_train, metric_valid], axis=1).T
     logger.info(metrics)
 
+    logger.info('Saving results')
     results_dir = Path(results_dir) / model
     results_dir.mkdir(exist_ok=True, parents=True)
 
