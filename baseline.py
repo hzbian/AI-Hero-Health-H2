@@ -16,7 +16,8 @@ logger = logging.getLogger(__name__)
 
 MODELS = {
     'logistic_regression': (LogisticRegression, dict(C=1.0, n_jobs=20)),
-    'random_forest': (RandomForestClassifier, dict(n_estimators=100, n_jobs=20)),
+    'random_forest': (RandomForestClassifier,
+                      dict(n_estimators=100, n_jobs=20)),
 }
 
 
@@ -126,6 +127,7 @@ def main(
     logger.info(metrics)
 
     results_dir = Path(results_dir) / model
+    results_dir.mkdir(exist_ok=True, parents=True)
 
     train_fn = results_dir / 'train.csv'
     df_train.to_csv(train_fn, index=False)
