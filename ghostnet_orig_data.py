@@ -13,6 +13,7 @@ from argparse import ArgumentParser
 from torchvision import transforms
 sys.path.append('..')
 from dataset import CovidImageDataset
+import random
 
 def seed_worker(worker_id):
     '''
