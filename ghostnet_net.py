@@ -135,6 +135,7 @@ class MyDataModule(pl.LightningDataModule):
         batch_size: int = 2,
         num_workers: int = 0,
         data_root: str = 'test.h5',
+        val_data_root: str = 'test.h5',
         sample_size = 100,
     ):
         super().__init__()
@@ -143,15 +144,15 @@ class MyDataModule(pl.LightningDataModule):
             transforms.Lambda(lambda x : x.flatten())
             ])
         self.dataset = H5Dataset(data_root, target_transform=self.target_transform, load_num=sample_size)
-        
+        self.val_dataset = H5Dataset(val_data_root, target_transform=self.target_transform, load_num=sample_size)
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.on_gpu = False
 
-        train_size = int(0.6 * len(self.dataset))
-        val_size = int(0.4 * len(self.dataset))
-        test_size = len(self.dataset) - (train_size + val_size)
-        self.train_dataset, self.val_dataset, self.test_dataset = torch.utils.data.random_split(self.dataset, [train_size, val_size, test_size])
+        #train_size = int(0.6 * len(self.dataset))
+        #val_size = int(0.4 * len(self.dataset))
+        #test_size = len(self.dataset) - (train_size + val_size)
+        #self.train_dataset, self.val_dataset, self.test_dataset = torch.utils.data.random_split(self.dataset, [train_size, val_size, test_size])
  
     def train_dataloader(self):
         return DataLoader(self.train_dataset, shuffle=True, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu)
