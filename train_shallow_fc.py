@@ -121,8 +121,11 @@ def main(
     net = FCN(CHANNELS, P_DROPOUT, LR)
 
     logger.info('Loading data')
-    train_ds = H5Dataset(train_path, load_num=16000, transform=transform)
-    valid_ds = H5Dataset(valid_path, load_num=1000,)
+    train_ds = H5Dataset(train_path, load_num=16000,
+                         transform=transform, mean=None)
+    mn = train_ds.mean
+    sd = train_ds.std
+    valid_ds = H5Dataset(valid_path, load_num=1000, mean=mn, std=sd)
 
     train_dl = DataLoader(
         train_ds,
