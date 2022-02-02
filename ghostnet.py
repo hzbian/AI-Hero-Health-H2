@@ -6,6 +6,8 @@ from dataset import CovidImageDataset
 import h5py
 from tqdm import tqdm
 import itertools
+import numpy as np
+import random
 
 # preferences
 data_base = '/hkfs/work/workspace/scratch/im9193-health_challenge/data'
