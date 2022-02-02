@@ -8,7 +8,7 @@ from tqdm import tqdm
 import itertools
 import numpy as np
 import random
-
+torch.multiprocessing.set_sharing_strategy('file_system')
 # preferences
 data_base = '/hkfs/work/workspace/scratch/im9193-health_challenge/data'
 #data_base = '/home/dmeier/AI-HERO/data'

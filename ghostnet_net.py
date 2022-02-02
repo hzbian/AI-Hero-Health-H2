@@ -11,14 +11,10 @@ from pytorch_lightning.utilities.cli import LightningCLI
 from pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 from argparse import ArgumentParser
 from torchvision import transforms
-import seaborn as sns
-import matplotlib.pyplot as plt
 sys.path.append('..')
 
-#sns.set(style="darkgrid")
-
 class H5Dataset(Dataset):
-    def __init__(self, path, load_num=100, transform=None, target_transform=None):
+    def __init__(self, path, load_num=None, transform=None, target_transform=None):
         self.transform = transform
         self.load_num = load_num
         self.target_transform = target_transform
@@ -26,6 +22,8 @@ class H5Dataset(Dataset):
         self.open_hdf5()
         self.x = torch.tensor(self.img_hdf5['imgs'][:load_num])
         self.y = torch.tensor(self.img_hdf5['labels'][:load_num])
+        if (self.load_num is None):
+            self.load_num = len(self.y)
         
     def __len__(self):
         return self.load_num
@@ -49,7 +47,7 @@ class GhostNetNet(pl.LightningModule):
         self.save_hyperparameters()
         self.criterion = nn.BCEWithLogitsLoss()
 
-        self.net = self.create_sequential(1000, 1, self.hparams.layer_size, blow=self.hparams.blow, shrink_factor=self.hparams.shrink_factor)
+        self.net = self.create_sequential(1280, 1, self.hparams.layer_size, blow=self.hparams.blow, shrink_factor=self.hparams.shrink_factor)
         print(self.net)
 
     def forward(self, x):
@@ -96,17 +94,6 @@ class GhostNetNet(pl.LightningModule):
         self.log('train_loss', loss)
         return loss
 
-    def test_step(self, batch, batch_nb):
-        x, y = batch
-        y_hat = self.forward(x)
-        loss = self.criterion(y, y_hat)
-        return {'s_test_loss': test_loss}
-
-    def test_epoch_end(self, outputs):
-        avg_loss = torch.stack([x['s_test_loss'] for x in outputs]).mean()
-        self.log('test_loss', avg_loss)
-        return  avg_loss
-
     def validation_step(self, batch, batch_nb):
         x, y = batch
         y_hat = self.forward(x)
@@ -114,7 +101,6 @@ class GhostNetNet(pl.LightningModule):
         y_hat = (y_hat > 0.5).float()
         accuracy = (y_hat == y).float().mean() * 100.
         return {'s_val_loss': loss, 'accuracy': accuracy}
-
 
     def validation_epoch_end(self, outputs):
         val_loss = torch.stack([x['s_val_loss'] for x in outputs]).mean()
@@ -129,39 +115,29 @@ class GhostNetNet(pl.LightningModule):
             return [optim.SGD(model.parameters(), lr=self.hparams.learning_rate, momentum=0.9)]
 
 class MyDataModule(pl.LightningDataModule):
-
     def __init__(
         self,
         batch_size: int = 2,
         num_workers: int = 0,
-        data_root: str = 'test.h5',
-        val_data_root: str = 'test.h5',
-        sample_size = 100,
+        data_root: str = 'train_augmented_cut_layer.h5',
+        val_data_root: str = 'valid_cut_layer.h5',
+        sample_size = None,
     ):
         super().__init__()
-        #self.save_hyperparameters()
         self.target_transform =  transforms.Compose([
             transforms.Lambda(lambda x : x.flatten())
             ])
-        self.dataset = H5Dataset(data_root, target_transform=self.target_transform, load_num=sample_size)
-        self.val_dataset = H5Dataset(val_data_root, target_transform=self.target_transform, load_num=sample_size)
+        self.train_dataset = H5Dataset(data_root, target_transform=self.target_transform, load_num=sample_size)
+        self.val_dataset = H5Dataset(val_data_root, target_transform=self.target_transform)
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.on_gpu = False
-
-        #train_size = int(0.6 * len(self.dataset))
-        #val_size = int(0.4 * len(self.dataset))
-        #test_size = len(self.dataset) - (train_size + val_size)
-        #self.train_dataset, self.val_dataset, self.test_dataset = torch.utils.data.random_split(self.dataset, [train_size, val_size, test_size])
  
     def train_dataloader(self):
         return DataLoader(self.train_dataset, shuffle=True, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu)
 
     def val_dataloader(self):
         return DataLoader(self.val_dataset, shuffle=False, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu)
-
-    def test_dataloader(self):
-        return DataLoader(self.test_dataset, shuffle=False, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu)
 
 if __name__ == '__main__':
     try:
