@@ -9,7 +9,7 @@ import itertools
 
 # preferences
 data_base = '/hkfs/work/workspace/scratch/im9193-health_challenge/data'
-data_base = '/home/dmeier/AI-HERO/data'
+#data_base = '/home/dmeier/AI-HERO/data'
 seed_worker=42
 
 dataset = CovidImageDataset(
