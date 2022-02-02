@@ -116,6 +116,7 @@ class MyDataModule(pl.LightningDataModule):
     def __init__(
         self,
         batch_size: int = 32,
+        sample_size: int = None,
         num_workers: int = 0,
         data_base: str = '/hkfs/work/workspace/scratch/im9193-health_challenge/data',
         sample_size = None,
@@ -125,10 +126,13 @@ class MyDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.on_gpu = False
         
-        self.train_dataset = CovidImageDataset(
+        dataset = CovidImageDataset(
             os.path.join(data_base, 'train.csv'),
             os.path.join(data_base, 'imgs'),
             transform='resize_rotate_crop', rgb_mode=True)
+        if sample_size is None:
+            sample_size = len(dataset)
+        self.train_dataset = torch.utils.data.random_split(dataset, [sample_size, len(dataset)-sample_size])[0]
         self.val_dataset = CovidImageDataset(
             os.path.join(data_base, 'valid.csv'),
             os.path.join(data_base, 'imgs'),
