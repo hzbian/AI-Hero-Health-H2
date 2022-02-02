@@ -25,8 +25,8 @@ def seed_worker(worker_id):
 
 
 dataset = CovidImageDataset(
-    os.path.join(data_base, 'train.csv'),
-    os.path.join(data_base, 'imgs'), transform='resize_rotate_crop',rgb_mode=True)
+    os.path.join(data_base, 'valid.csv'),
+    os.path.join(data_base, 'imgs'), rgb_mode=True)
 
 sample_size = len(dataset)
 trainset = torch.utils.data.random_split(dataset, [sample_size, len(dataset)-sample_size])[0]

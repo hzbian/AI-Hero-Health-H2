@@ -17,11 +17,11 @@ from shallow_fc import FCN
 logger = logging.getLogger(__name__)
 
 MAX_EPOCHS = 20
-CHANNELS = [1000, 2000, 1]
-P_DROPOUT = [0, 0.2]
+CHANNELS = [1280, 2*1280, 2*1280, 1]
+P_DROPOUT = [0, 0.2, 0.2]
 LR = 1e-3
 BATCH_SIZE = 64
-NOISE_SCALE = 0.0
+NOISE_SCALE = 0.05
 N_JOBS = 12
 
 
