@@ -18,7 +18,7 @@ dataset = CovidImageDataset(
 
 sample_size = len(dataset)
 trainset = torch.utils.data.random_split(dataset, [sample_size, len(dataset)-sample_size])[0]
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=True, num_workers=20),
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=True, num_workers=20,
                                           worker_init_fn=seed_worker)
                                               
 # load model           
