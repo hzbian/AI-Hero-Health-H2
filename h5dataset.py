@@ -1,6 +1,10 @@
+import logging
+
 import h5py
 import torch
 from torch.utils.data import Dataset
+
+logger = logging.getLogger(__name__)
 
 
 class H5Dataset(Dataset):
@@ -19,6 +23,10 @@ class H5Dataset(Dataset):
             std[std == 0.] = 1.
 
         self.x = (self.x - mean) / std
+
+        mn = self.x.mean(dim=0)
+        logger.info(f'{mn.mean()=}')
+        logger.info(f'{mn.std()=}')
         self.mean = mean
         self.std = std
 
