@@ -119,7 +119,6 @@ class MyDataModule(pl.LightningDataModule):
         sample_size: int = None,
         num_workers: int = 0,
         data_base: str = '/hkfs/work/workspace/scratch/im9193-health_challenge/data',
-        sample_size = None,
     ):
         super().__init__()
         self.batch_size = batch_size
