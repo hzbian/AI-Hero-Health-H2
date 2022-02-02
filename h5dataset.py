@@ -16,6 +16,7 @@ class H5Dataset(Dataset):
         if mean is None or std is None:
             mean = self.x.mean(dim=0)
             std = self.x.std(dim=0)
+            std[std == 0.] = 1.
 
         self.x = (self.x - mean) / std
         self.mean = mean
