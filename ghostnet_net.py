@@ -47,7 +47,7 @@ class GhostNetNet(pl.LightningModule):
         self.save_hyperparameters()
         self.criterion = nn.BCEWithLogitsLoss()
 
-        self.net = self.create_sequential(1000, 1, self.hparams.layer_size, blow=self.hparams.blow, shrink_factor=self.hparams.shrink_factor)
+        self.net = self.create_sequential(1280, 1, self.hparams.layer_size, blow=self.hparams.blow, shrink_factor=self.hparams.shrink_factor)
         print(self.net)
 
     def forward(self, x):
