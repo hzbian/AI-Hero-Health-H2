@@ -27,6 +27,9 @@ class H5Dataset(Dataset):
         mn = self.x.mean(dim=0)
         logger.info(f'{mn.mean()=}')
         logger.info(f'{mn.std()=}')
+        sd = self.x.std(dim=0)
+        logger.info(f'{sd.mean()=}')
+        logger.info(f'{sd.std()=}')
         self.mean = mean
         self.std = std
 
