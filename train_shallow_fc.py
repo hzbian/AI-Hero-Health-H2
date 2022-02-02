@@ -42,7 +42,7 @@ def transform(x: torch.Tensor) -> torch.Tensor:
     return x
 
 
-def compute_metrics(ds: H5Dataset, scores: List[torch.Tensor]) -> pd.Series:
+def compute_metrics(ds: H5Dataset, scores: List[torch.Tensor]) -> Tuple[pd.Series, pd.DataFrame]:
     """Compute classification metrics after training
 
     Parameters
@@ -70,6 +70,12 @@ def compute_metrics(ds: H5Dataset, scores: List[torch.Tensor]) -> pd.Series:
     mn_score_neg = y_score[y_true == 0].mean()
     sd_score_neg = y_score[y_true == 0].std()
 
+    results = pd.DataFrame(dict(
+        y_true=y_true,
+        y_score=y_score,
+        y_pred=y_pred,
+    ))
+
     return pd.Series(dict(
         accuracy=accuracy_score(y_true, y_pred),
         balanced_accuracy=balanced_accuracy_score(y_true, y_pred),
@@ -79,7 +85,7 @@ def compute_metrics(ds: H5Dataset, scores: List[torch.Tensor]) -> pd.Series:
         std_score_pos=sd_score_pos,
         mean_score_neg=mn_score_neg,
         std_score_neg=sd_score_neg,
-    ))
+    )), results
 
 
 @click.command()
@@ -146,10 +152,11 @@ def main(
     logger.info('Predict on validation dataset')
     scores = trainer.predict(net, valid_dl)
 
-    metrics = compute_metrics(valid_ds, scores)
+    metrics, predictions = compute_metrics(valid_ds, scores)
     logger.info(f'Metrics:\n{metrics}')
 
     metrics.to_csv(checkpoint_path / 'metrics.csv')
+    predictions.to_csv(checkpoint_path / 'predictions.csv')
 
     logger.info('Done')
 
