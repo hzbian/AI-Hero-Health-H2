@@ -9,10 +9,17 @@ from torch.optim import Adam
 
 
 class FCN(pl.LightningModule):
-    def __init__(self, channels: List[int], lr: float):
+    def __init__(
+        self,
+        channels: List[int],
+        p_dropout: List[float],
+        lr: float,
+        weight_decay: float = 1e-4
+    ):
         super().__init__()
 
         self.lr = lr
+        self.weight_decay = weight_decay
 
         self.metrics = dict(
             accuracy=tmf.accuracy,
@@ -21,7 +28,8 @@ class FCN(pl.LightningModule):
         )
 
         layers: List[nn.Module] = []
-        for in_ch, out_ch in zip(channels[:-1], channels[1:]):
+        for in_ch, out_ch, p in zip(channels[:-1], channels[1:], p_dropout):
+            layers.append(nn.Dropout(p))
             layers.append(nn.Linear(in_ch, out_ch))
             layers.append(nn.ReLU())
 
@@ -73,11 +81,15 @@ class FCN(pl.LightningModule):
         return self(x)
 
     def configure_optimizers(self):
-        return Adam(self.parameters(), lr=self.lr)
+        return Adam(
+            self.parameters(),
+            lr=self.lr,
+            weight_decay=self.weight_decay
+        )
 
 
 if __name__ == "__main__":
-    net = FCN([10, 100, 1], 1e-3)
+    net = FCN([10, 100, 1], [0, 0.2], 1e-3, 1e-4)
     trainer = pl.Trainer(accelerator='auto',
                          deterministic=True, max_epochs=10, logger=None,
                          enable_checkpointing=False, gpus=1)

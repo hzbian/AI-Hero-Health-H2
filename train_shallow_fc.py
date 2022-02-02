@@ -18,9 +18,10 @@ logger = logging.getLogger(__name__)
 
 MAX_EPOCHS = 20
 CHANNELS = [1000, 2000, 1]
+P_DROPOUT = [0, 0.2]
 LR = 1e-3
 BATCH_SIZE = 64
-NOISE_SCALE = 0.01
+NOISE_SCALE = 0.0
 N_JOBS = 12
 
 
@@ -110,7 +111,7 @@ def main(
         enable_checkpointing=False
     )
 
-    net = FCN(CHANNELS, LR)
+    net = FCN(CHANNELS, P_DROPOUT, LR)
 
     logger.info('Loading data')
     train_ds = H5Dataset(train_path, load_num=16000, transform=transform)
