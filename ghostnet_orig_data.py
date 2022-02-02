@@ -25,7 +25,7 @@ def seed_worker(worker_id):
     random.seed(worker_seed)
 
 class GhostNetNet(pl.LightningModule):
-    def __init__(self, name:str='test', layer_size:int=5, blow:float=0., shrink_factor:str='log', learning_rate:float=1.e-4, gpus:int=0, optimizer:str='adam', remove_last_layer=True):
+    def __init__(self, name:str='test', layer_size:int=5, blow:float=0., shrink_factor:str='log', learning_rate:float=1.e-4, gpus:int=0, optimizer:str='adam', remove_last_layer=True, model_eval=True):
         super(GhostNetNet, self).__init__()
         self.save_hyperparameters()
         self.criterion = nn.BCEWithLogitsLoss()
@@ -41,7 +41,8 @@ class GhostNetNet(pl.LightningModule):
         if remove_last_layer:
             self.model.classifier = torch.nn.Sequential(*list(self.model.classifier.children())[:-1])
 
-        self.model.eval()
+        if model_eval:
+            self.model.eval()
 
     def forward(self, x):
         x = self.model(x)
@@ -114,7 +115,7 @@ class GhostNetNet(pl.LightningModule):
 class MyDataModule(pl.LightningDataModule):
     def __init__(
         self,
-        batch_size: int = 2,
+        batch_size: int = 32,
         num_workers: int = 0,
         data_base: str = '/hkfs/work/workspace/scratch/im9193-health_challenge/data',
         sample_size = None,
