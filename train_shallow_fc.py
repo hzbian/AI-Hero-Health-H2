@@ -85,7 +85,7 @@ def compute_metrics(ds: H5Dataset, scores: List[torch.Tensor]) -> pd.Series:
 @click.command()
 @click.argument('train_path', type=click.Path(exists=True, dir_okay=False))
 @click.argument('valid_path', type=click.Path(exists=True, dir_okay=False))
-@click.argument('checkpoint_path', type=click.Path(dir_okay=False))
+@click.argument('checkpoint_path', type=click.Path(file_okay=False))
 def main(
     train_path: Union[str, Path],
     valid_path: Union[str, Path],
@@ -140,14 +140,16 @@ def main(
 
     logger.info('Saving model')
     checkpoint_path = Path(checkpoint_path)
-    checkpoint_path.parent.mkdir(exist_ok=True, parents=True)
-    trainer.save_checkpoint(checkpoint_path)
+    checkpoint_path.mkdir(exist_ok=True, parents=True)
+    trainer.save_checkpoint(checkpoint_path / 'shallow_fc.pt')
 
     logger.info('Predict on validation dataset')
     scores = trainer.predict(net, valid_dl)
 
     metrics = compute_metrics(valid_ds, scores)
     logger.info(f'Metrics:\n{metrics}')
+
+    metrics.to_csv(checkpoint_path / 'metrics.csv')
 
     logger.info('Done')
 

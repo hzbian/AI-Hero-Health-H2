@@ -9,6 +9,7 @@
 #SBATCH --cpus-per-task=152
 #SBATCH --time=20:00:00
 #SBATCH --output=/hkfs/work/workspace/scratch/im9193-H2/output/runner.txt
+#SBATCH --reservation=ai_hero
 
 export CUDA_CACHE_DISABLE=1
 export OMP_NUM_THREADS=8
