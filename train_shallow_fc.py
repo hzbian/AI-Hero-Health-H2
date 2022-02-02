@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any, List, Union
+from typing import Any, List, Tuple, Union
 
 import click
 import numpy as np
@@ -17,7 +17,8 @@ from shallow_fc import FCN
 logger = logging.getLogger(__name__)
 
 MAX_EPOCHS = 20
-CHANNELS = [1280, 2*1280, 2*1280, 1]
+IN_CHANNEL = 1280
+CHANNELS = [IN_CHANNEL, 2*IN_CHANNEL, 2*IN_CHANNEL, 1]
 P_DROPOUT = [0, 0.2, 0.2]
 LR = 1e-3
 BATCH_SIZE = 64
