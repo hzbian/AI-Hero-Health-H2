@@ -17,8 +17,6 @@ from shallow_fc import FCN
 logger = logging.getLogger(__name__)
 
 MAX_EPOCHS = 20
-IN_CHANNEL = 1280
-CHANNELS = [IN_CHANNEL, 2*IN_CHANNEL, 2*IN_CHANNEL, 1]
 P_DROPOUT = [0, 0.2, 0.2]
 LR = 1e-3
 BATCH_SIZE = 64
@@ -93,10 +91,13 @@ def compute_metrics(ds: H5Dataset, scores: List[torch.Tensor]) -> Tuple[pd.Serie
 @click.argument('train_path', type=click.Path(exists=True, dir_okay=False))
 @click.argument('valid_path', type=click.Path(exists=True, dir_okay=False))
 @click.argument('checkpoint_path', type=click.Path(file_okay=False))
+@click.option('-d', '--n_dims', type=click.INT, default=1280,
+              help='Number of input features.')
 def main(
     train_path: Union[str, Path],
     valid_path: Union[str, Path],
-    checkpoint_path: Union[str, Path]
+    checkpoint_path: Union[str, Path],
+    n_dims: int
 ):
     """Run training of shallow FC network on ghostnet output
 
@@ -118,7 +119,9 @@ def main(
         enable_checkpointing=False
     )
 
-    net = FCN(CHANNELS, P_DROPOUT, LR)
+    channels = [n_dims, 2*n_dims, 2*n_dims, 1]
+
+    net = FCN(channels, P_DROPOUT, LR)
 
     logger.info('Loading data')
     train_ds = H5Dataset(train_path, load_num=16000,

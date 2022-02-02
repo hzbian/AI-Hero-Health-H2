@@ -18,9 +18,10 @@ class H5Dataset(Dataset):
             std = self.x.std(dim=0)
 
         self.x = (self.x - mean) / std
-        self.y = torch.tensor(self.img_hdf5['labels'][:load_num])
         self.mean = mean
         self.std = std
+
+        self.y = torch.tensor(self.img_hdf5['labels'][:load_num])
 
     def __len__(self):
         assert len(self.x) == len(self.y)
