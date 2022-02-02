@@ -6,11 +6,23 @@ from dataset import CovidImageDataset
 import h5py
 from tqdm import tqdm
 import itertools
+import numpy as np
+import random
 
 # preferences
 data_base = '/hkfs/work/workspace/scratch/im9193-health_challenge/data'
 #data_base = '/home/dmeier/AI-HERO/data'
-seed_worker=42
+
+def seed_worker(worker_id):
+    '''
+    https://pytorch.org/docs/stable/notes/randomness.html#dataloader
+    to fix https://tanelp.github.io/posts/a-bug-that-plagues-thousands-of-open-source-ml-projects/
+    ensures different random numbers each batch with each worker every epoch while keeping reproducibility
+    '''
+    worker_seed = torch.initial_seed() % 2 ** 32
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
+
 
 dataset = CovidImageDataset(
     os.path.join(data_base, 'train.csv'),
