@@ -112,7 +112,7 @@ def main(
     """
     logger.info('Start')
     trainer = pl.Trainer(
-        gpus=1,
+        gpus=1 if torch.cuda.is_available() else 0,
         deterministic=True,
         logger=None,
         max_epochs=MAX_EPOCHS,
