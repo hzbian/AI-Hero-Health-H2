@@ -49,7 +49,7 @@ class GhostNetNet(pl.LightningModule):
         self.save_hyperparameters()
         self.criterion = nn.BCEWithLogitsLoss()
 
-        self.net = self.create_sequential(1000, 1, self.hparams.layer_size, blow=self.hparams.blow, shrink_factor=self.hparams.shrink_factor)
+        self.net = self.create_sequential(1280, 1, self.hparams.layer_size, blow=self.hparams.blow, shrink_factor=self.hparams.shrink_factor)
         print(self.net)
 
     def forward(self, x):
@@ -134,8 +134,8 @@ class MyDataModule(pl.LightningDataModule):
         self,
         batch_size: int = 2,
         num_workers: int = 0,
-        data_root: str = 'test.h5',
-        val_data_root: str = 'test.h5',
+        data_root: str = 'train_augmented_cut_layer.h5',
+        val_data_root: str = 'valid_cut_layer.h5',
         sample_size = 100,
     ):
         super().__init__()
@@ -143,7 +143,7 @@ class MyDataModule(pl.LightningDataModule):
         self.target_transform =  transforms.Compose([
             transforms.Lambda(lambda x : x.flatten())
             ])
-        self.dataset = H5Dataset(data_root, target_transform=self.target_transform, load_num=sample_size)
+        self.train_dataset = H5Dataset(data_root, target_transform=self.target_transform, load_num=sample_size)
         self.val_dataset = H5Dataset(val_data_root, target_transform=self.target_transform, load_num=sample_size)
         self.batch_size = batch_size
         self.num_workers = num_workers
