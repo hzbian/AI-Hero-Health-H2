@@ -9,16 +9,16 @@ import itertools
 
 # preferences
 data_base = '/hkfs/work/workspace/scratch/im9193-health_challenge/data'
-
+data_base = '/home/dmeier/AI-HERO/data'
 seed_worker=42
 
 dataset = CovidImageDataset(
     os.path.join(data_base, 'train.csv'),
-    os.path.join(data_base, 'imgs'), rgb_mode=True)
+    os.path.join(data_base, 'imgs'), transform='resize_rotate_crop',rgb_mode=True)
 
-sample_size = 1000
+sample_size = len(dataset)
 trainset = torch.utils.data.random_split(dataset, [sample_size, len(dataset)-sample_size])[0]
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=True, num_workers=0,
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=True, num_workers=20),
                                           worker_init_fn=seed_worker)
                                               
 # load model           
@@ -28,6 +28,7 @@ model.eval()
 if torch.cuda.is_available():
     model.to('cuda')
 
+model.classifier = torch.nn.Sequential(*list(model.classifier.children())[:-1])
 
 outputs = []
 labels = []
