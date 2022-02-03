@@ -59,7 +59,7 @@ if __name__ == '__main__':
     testset = CovidImageDataset(
         os.path.join(data_dir, 'evaluation/{}.csv'.format('valid' if check_script else 'test')),
         os.path.join(data_dir, 'data/imgs' if check_script else 'data/test'),
-        transform=None)
+        transform=None, rgb_mode=True)
     testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False, num_workers=128)
 
     # run inference
