@@ -106,6 +106,7 @@ class GhostNetNet(pl.LightningModule):
         val_accuracy = torch.stack([x['accuracy'] for x in outputs]).mean()
         self.log('val_loss', val_loss)
         self.log('val_accuracy', val_accuracy, prog_bar=True)
+        torch.save(self.model.state_dict(), os.getcwd()+'/ghost_'+str(self.current_epoch)+'.ckpt')
 
     def configure_optimizers(self):
         if self.hparams.optimizer == 'adam':
@@ -116,7 +117,7 @@ class GhostNetNet(pl.LightningModule):
 class MyDataModule(pl.LightningDataModule):
     def __init__(
         self,
-        batch_size: int = 32,
+        batch_size: int = 64,
         sample_size: int = None,
         num_workers: int = 0,
         data_base: str = '/hkfs/work/workspace/scratch/im9193-health_challenge/data',
