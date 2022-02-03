@@ -26,7 +26,7 @@ def seed_worker(worker_id):
     random.seed(worker_seed)
 
 class GhostNetNet(pl.LightningModule):
-    def __init__(self, name:str='test', layer_size:int=5, blow:float=0., shrink_factor:str='log', learning_rate:float=1.e-4, gpus:int=0, optimizer:str='adam', remove_last_layer=True, model_eval=True):
+    def __init__(self, name:str='test', layer_size:int=5, blow:float=0., shrink_factor:str='log', learning_rate:float=1.e-4, gpus:int=0, optimizer:str='adam', remove_last_layer=True, model_eval=True, dropout_probability=0.2):
         super(GhostNetNet, self).__init__()
         self.save_hyperparameters()
         self.criterion = nn.BCEWithLogitsLoss()
@@ -81,6 +81,7 @@ class GhostNetNet(pl.LightningModule):
             nn_layers.append(nn.Linear(layers[i].item(), layers[i+1].item()))
             if not i == len(layers)-2:
                 nn_layers.append(nn.ReLU())
+                nn_layers.append(nn.Dropout(p=dropout_probability))
                 nn_layers.append(nn.BatchNorm1d(layers[i+1].item()))
         return nn.Sequential(*nn_layers)
         
