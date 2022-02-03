@@ -30,6 +30,7 @@ class GhostNetNet(pl.LightningModule):
         super(GhostNetNet, self).__init__()
         self.save_hyperparameters()
         self.criterion = nn.BCEWithLogitsLoss()
+        self.dropout_probability = dropout_probability
         if remove_last_layer:
             self.input_layer_size = 1280
         else:
@@ -81,7 +82,7 @@ class GhostNetNet(pl.LightningModule):
             nn_layers.append(nn.Linear(layers[i].item(), layers[i+1].item()))
             if not i == len(layers)-2:
                 nn_layers.append(nn.ReLU())
-                nn_layers.append(nn.Dropout(p=dropout_probability))
+                nn_layers.append(nn.Dropout(p=self.dropout_probability))
                 nn_layers.append(nn.BatchNorm1d(layers[i+1].item()))
         return nn.Sequential(*nn_layers)
         
