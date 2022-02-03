@@ -9,7 +9,7 @@ import numpy as np
 from dataset import CovidImageDataset
 
 # TODO: import your model
-from model import VGG as SubmittedModel
+from ghostnet_orig_data import GhostNetNet
 
 
 def predict(model, device, test_loader):
@@ -48,8 +48,9 @@ if __name__ == '__main__':
     filename = weights_path.split('/')[-1]
 
     # load model with pretrained weights
-    model = SubmittedModel('VGG19')  # TODO: adjust arguments according to your model
-    model.load_state_dict(torch.load(weights_path))
+    #model = SubmittedModel('VGG19')  # TODO: adjust arguments according to your model
+    #model.load_state_dict(torch.load(weights_path))
+    model = GhostNetNet.load_from_checkpoint(weights_path)
     model.eval()
 
     # dataloader
