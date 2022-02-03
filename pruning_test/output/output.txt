@@ -1,0 +1,239 @@
+Using Cuda: True
+Epoch:  0
+Epoch:  1
+Epoch:  2
+Epoch:  3
+Epoch:  4
+Epoch:  5
+Epoch:  6
+Epoch:  7
+Epoch:  8
+Epoch:  9
+Accuracy : 0.5466666666666666
+Epoch:  10
+Epoch:  11
+Epoch:  12
+Epoch:  13
+Epoch:  14
+Epoch:  15
+Epoch:  16
+Epoch:  17
+Epoch:  18
+Epoch:  19
+Accuracy : 0.5733333333333334
+Epoch:  20
+Epoch:  21
+Epoch:  22
+Epoch:  23
+Epoch:  24
+Epoch:  25
+Epoch:  26
+Epoch:  27
+Epoch:  28
+Epoch:  29
+Accuracy : 0.6
+Epoch:  30
+Epoch:  31
+Epoch:  32
+Epoch:  33
+Epoch:  34
+Epoch:  35
+Epoch:  36
+Epoch:  37
+Epoch:  38
+Epoch:  39
+Accuracy : 0.6066666666666667
+Epoch:  40
+Epoch:  41
+Epoch:  42
+Epoch:  43
+Epoch:  44
+Epoch:  45
+Epoch:  46
+Epoch:  47
+Epoch:  48
+Epoch:  49
+Accuracy : 0.62
+Epoch:  50
+Epoch:  51
+Epoch:  52
+Epoch:  53
+Epoch:  54
+Epoch:  55
+Epoch:  56
+Epoch:  57
+Epoch:  58
+Epoch:  59
+Accuracy : 0.6066666666666667
+Epoch:  60
+Epoch:  61
+Epoch:  62
+Epoch:  63
+Epoch:  64
+Epoch:  65
+Epoch:  66
+Epoch:  67
+Epoch:  68
+Epoch:  69
+Accuracy : 0.6333333333333333
+Epoch:  70
+Epoch:  71
+Epoch:  72
+Epoch:  73
+Epoch:  74
+Epoch:  75
+Epoch:  76
+Epoch:  77
+Epoch:  78
+Epoch:  79
+Accuracy : 0.6266666666666667
+Epoch:  80
+Epoch:  81
+Epoch:  82
+Epoch:  83
+Epoch:  84
+Epoch:  85
+Epoch:  86
+Epoch:  87
+Epoch:  88
+Epoch:  89
+Accuracy : 0.6066666666666667
+Epoch:  90
+Epoch:  91
+Epoch:  92
+Epoch:  93
+Epoch:  94
+Epoch:  95
+Epoch:  96
+Epoch:  97
+Epoch:  98
+Epoch:  99
+Accuracy : 0.6333333333333333
+Finished fine tuning.
+took 4086.201890 s
+Accuracy : 0.6333333333333333
+Number of prunning iterations to reduce 67% filters 5
+
+Ranking filters.. 
+Layers that will be prunned {17: 48, 28: 128, 10: 12, 24: 74, 26: 80, 21: 71, 14: 19, 12: 13, 19: 54, 2: 1, 0: 2, 5: 7, 7: 3}
+Prunning filters.. 
+Filters pruned 87.87878787878788%
+Accuracy : 0.6133333333333333
+Fine tuning to recover from prunning iteration.
+Epoch:  0
+Epoch:  1
+Epoch:  2
+Epoch:  3
+Epoch:  4
+Epoch:  5
+Epoch:  6
+Epoch:  7
+Epoch:  8
+Epoch:  9
+Accuracy : 0.72
+Finished fine tuning.
+After finetuning0
+saving model
+
+Ranking filters.. 
+Layers that will be prunned {26: 90, 12: 12, 21: 73, 28: 74, 19: 69, 24: 63, 17: 71, 14: 24, 7: 6, 10: 20, 2: 4, 5: 5, 0: 1}
+Prunning filters.. 
+Filters pruned 75.75757575757575%
+Accuracy : 0.6733333333333333
+Fine tuning to recover from prunning iteration.
+Epoch:  0
+Epoch:  1
+Epoch:  2
+Epoch:  3
+Epoch:  4
+Epoch:  5
+Epoch:  6
+Epoch:  7
+Epoch:  8
+Epoch:  9
+Accuracy : 0.6933333333333334
+Finished fine tuning.
+After finetuning1
+saving model
+
+Ranking filters.. 
+Layers that will be prunned {28: 67, 19: 59, 26: 71, 14: 27, 21: 71, 17: 63, 7: 9, 10: 21, 5: 15, 12: 27, 24: 72, 0: 6, 2: 4}
+Prunning filters.. 
+Filters pruned 63.63636363636363%
+Accuracy : 0.62
+Fine tuning to recover from prunning iteration.
+Epoch:  0
+Epoch:  1
+Epoch:  2
+Epoch:  3
+Epoch:  4
+Epoch:  5
+Epoch:  6
+Epoch:  7
+Epoch:  8
+Epoch:  9
+Accuracy : 0.6733333333333333
+Finished fine tuning.
+After finetuning2
+saving model
+
+Ranking filters.. 
+Layers that will be prunned {26: 69, 17: 73, 7: 9, 21: 70, 19: 74, 0: 8, 24: 66, 5: 16, 28: 45, 10: 33, 14: 26, 2: 3, 12: 20}
+Prunning filters.. 
+Filters pruned 51.515151515151516%
+Accuracy : 0.5733333333333334
+Fine tuning to recover from prunning iteration.
+Epoch:  0
+Epoch:  1
+Epoch:  2
+Epoch:  3
+Epoch:  4
+Epoch:  5
+Epoch:  6
+Epoch:  7
+Epoch:  8
+Epoch:  9
+Accuracy : 0.6866666666666666
+Finished fine tuning.
+After finetuning3
+saving model
+
+Ranking filters.. 
+Layers that will be prunned {10: 32, 5: 17, 12: 43, 28: 52, 19: 68, 14: 29, 26: 43, 17: 59, 24: 62, 21: 71, 0: 12, 7: 17, 2: 7}
+Prunning filters.. 
+Filters pruned 39.39393939393939%
+Accuracy : 0.5666666666666667
+Fine tuning to recover from prunning iteration.
+Epoch:  0
+Epoch:  1
+Epoch:  2
+Epoch:  3
+Epoch:  4
+Epoch:  5
+Epoch:  6
+Epoch:  7
+Epoch:  8
+Epoch:  9
+Accuracy : 0.7066666666666667
+Finished fine tuning.
+After finetuning4
+saving model
+Finished. Going to fine tune the model a bit more
+Epoch:  0
+Epoch:  1
+Epoch:  2
+Epoch:  3
+Epoch:  4
+Epoch:  5
+Epoch:  6
+Epoch:  7
+Epoch:  8
+Epoch:  9
+Accuracy : 0.6866666666666666
+Epoch:  10
+Epoch:  11
+Epoch:  12
+Epoch:  13
+Epoch:  14
+Finished fine tuning.
+finished
