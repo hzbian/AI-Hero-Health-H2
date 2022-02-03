@@ -20,7 +20,7 @@ def predict(model, device, test_loader):
         for data, img_name in test_loader:
             data = data.to(device)
             output = model(data)
-            _, predicted = torch.max(output.data, 1)
+            predicted = (output > 0.5).int()
 
             predictions.append([[i.split('/')[-1] for i in img_name], predicted.cpu().numpy()])
 
