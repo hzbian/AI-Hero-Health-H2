@@ -1,3 +1,16 @@
+# Instructions
+
+## Installation
+- Setup a new virtual environment
+- `pip install -r requirements.txt`
+
+## Run evaluation
+Evaluation uses the given `run_eval.py` script. The command line flags are the same. We used our own runner script, but any should do:
+```
+sbatch runner.sh run_eval.py --weights_path=<path_to_model_ckpt> --save_dir=<save_dir> --data_dir=<data_dir>
+```
+
+
 AI-HERO Health Challenge on energy efficient AI - Predicting Covid-19 from chest x-ray images
 =============================================================================================
 
