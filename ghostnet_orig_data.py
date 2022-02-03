@@ -109,6 +109,21 @@ class GhostNetNet(pl.LightningModule):
         self.log('val_loss', val_loss)
         self.log('val_accuracy', val_accuracy, prog_bar=True)
         torch.save(self.model.state_dict(), os.getcwd()+'/ghost_'+str(self.current_epoch)+'.ckpt')
+        
+    def test_step(self, batch, batch_nb):
+        x, y = batch
+        y = y.float()
+        y_hat = self.forward(x)
+        loss = self.criterion(y, y_hat)
+        y_hat = (y_hat > 0.5).float()
+        accuracy = (y_hat == y).float().mean() * 100.
+        return {'s_test_loss': loss, 'test_accuracy': accuracy}
+
+    def test_epoch_end(self, outputs):
+        test_loss = torch.stack([x['s_test_loss'] for x in outputs]).mean()
+        test_accuracy = torch.stack([x['test_accuracy'] for x in outputs]).mean()
+        self.log('test_loss', test_loss)
+        self.log('test_accuracy', test_accuracy, prog_bar=True)
 
     def configure_optimizers(self):
         if self.hparams.optimizer == 'adam':
@@ -140,12 +155,18 @@ class MyDataModule(pl.LightningDataModule):
             os.path.join(data_base, 'valid.csv'),
             os.path.join(data_base, 'imgs'),
             transform=None, rgb_mode=True)
-
+        self.test_dataset = CovidImageDataset(
+            os.path.join(data_base, 'test.csv'),
+            os.path.join(data_base, 'imgs'),
+            transform=None, rgb_mode=True)
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, shuffle=True, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu, worker_init_fn=seed_worker,drop_last=True)
+        return DataLoader(self.train_dataset, shuffle=True, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu, worker_init_fn=seed_worker)
 
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, shuffle=False, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu, worker_init_fn=seed_worker, drop_last=True)
+        return DataLoader(self.val_dataset, shuffle=False, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu, worker_init_fn=seed_worker)
+        
+    def test_dataloader(self):
+        return DataLoader(self.test_dataset, shuffle=False, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.on_gpu, worker_init_fn=seed_worker)
  
 if __name__ == '__main__':
     try:
