@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from joblib import dump
 from sklearn.base import ClassifierMixin
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (accuracy_score, average_precision_score,
                              balanced_accuracy_score, roc_auc_score)
@@ -20,6 +20,8 @@ MODELS = {
                                                      solver='saga')),
     'random_forest': (RandomForestClassifier,
                       dict(n_estimators=100, n_jobs=20)),
+    'gradient_boosting': (GradientBoostingClassifier,
+                          dict(n_estimators=100, learning_rate=0.1))
 }
 
 
