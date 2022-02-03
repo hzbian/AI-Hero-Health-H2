@@ -26,7 +26,7 @@ def seed_worker(worker_id):
     random.seed(worker_seed)
 
 class GhostNetNet(pl.LightningModule):
-    def __init__(self, name:str='test', layer_size:int=5, blow:float=0., shrink_factor:str='log', learning_rate:float=1.e-4, gpus:int=0, optimizer:str='adam', remove_last_layer=True, model_eval=True, dropout_probability=0.2):
+    def __init__(self, name:str='test', layer_size:int=5, blow:float=0., shrink_factor:str='log', learning_rate:float=1e-4, gpus:int=0, optimizer:str='adam', remove_last_layer=True, model_eval=True, dropout_probability=0., weight_decay=1e-3):
         super(GhostNetNet, self).__init__()
         self.save_hyperparameters()
         self.criterion = nn.BCEWithLogitsLoss()
@@ -112,9 +112,9 @@ class GhostNetNet(pl.LightningModule):
 
     def configure_optimizers(self):
         if self.hparams.optimizer == 'adam':
-            return [torch.optim.Adam(self.parameters(), lr=self.hparams.learning_rate)]
+            return [torch.optim.Adam(self.parameters(), lr=self.hparams.learning_rate, weight_decay=self.hparams.weight_decay)]
         elif self.hparams.optimizer == 'sgd':
-            return [optim.SGD(model.parameters(), lr=self.hparams.learning_rate, momentum=0.9)]
+            return [optim.SGD(model.parameters(), lr=self.hparams.learning_rate, momentum=0.9, weight_decay=self.hparams.weight_decay)]
 
 class MyDataModule(pl.LightningDataModule):
     def __init__(
